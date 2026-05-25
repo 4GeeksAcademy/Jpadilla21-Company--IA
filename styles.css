@@ -1,0 +1,38 @@
+/* Importación nativa del motor de estilos de Tailwind CSS v4 */
+@import "https://cdn.jsdelivr.net/npm/tailwindcss@4/index.css";
+
+/* --- Capa de Ajustes Personalizados e Identidad Visual de HealthCore --- */
+
+/* Animación de entrada y salida fluida para los mensajes de error en los inputs */
+.opacity-100 {
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 0.2s ease-out;
+}
+
+.opacity-0 {
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: all 0.2s ease-in;
+}
+
+/* Adaptación del selector de fecha nativo para entornos oscuros */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.7) sepia(100%) saturate(500%) hue-rotate(130deg);
+    cursor: pointer;
+}
+
+/* Accesibilidad extendida: Anillo de foco (Focus Ring) personalizado para inputs */
+input:focus, select:focus {
+    box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.25);
+}
+
+/* Animación sutil pulsante para notificaciones de éxito */
+@keyframes pulse-subtle {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.95; }
+}
+
+#success-banner:not(.hidden) {
+    animation: pulse-subtle 3s infinite ease-in-out;
+}
