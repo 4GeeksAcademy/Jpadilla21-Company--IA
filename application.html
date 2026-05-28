@@ -3,128 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HealthCore Digital | Registro de Proyectos de Ingeniería IA</title>
-    
+    <title>HealthCore Digital | Formulario de Registro e Impacto de IA</title>
+    <!-- Tailwind CSS v4 -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-
     <style>
-        .opacity-100 {
-            opacity: 1;
-            transform: translateY(0);
-            transition: all 0.2s ease-out;
-        }
-        .opacity-0 {
-            opacity: 0;
-            transform: translateY(-4px);
-            transition: all 0.2s ease-in;
-        }
-        input[type="date"]::-webkit-calendar-picker-indicator {
-            filter: invert(0.7) sepia(100%) saturate(500%) hue-rotate(130deg);
-            cursor: pointer;
-        }
-        input:focus, select:focus {
-            box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.25);
-        }
-        @keyframes pulse-subtle {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.95; }
-        }
-        #success-banner:not(.hidden) {
-            animation: pulse-subtle 3s infinite ease-in-out;
-        }
+        .opacity-100 { opacity: 1; transform: translateY(0); transition: all 0.2s ease-out; }
+        .opacity-0 { opacity: 0; transform: translateY(-4px); transition: all 0.2s ease-in; }
     </style>
 </head>
-<body class="bg-slate-900 text-slate-100 font-sans antialiased min-h-screen flex items-center justify-center p-4 sm:p-6 lg:p-8">
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col">
 
-    <main class="w-full max-w-3xl bg-slate-800 rounded-2xl shadow-2xl border border-slate-700 overflow-hidden">
+    <!-- Enlace de Retorno Accesible -->
+    <div class="bg-slate-100 text-slate-600 text-xs py-3 px-4 border-b border-slate-200">
+        <div class="max-w-3xl mx-auto flex justify-between items-center">
+            <span class="font-medium tracking-wide text-slate-500">Módulo Integrado de Datos Clínicos</span>
+            <a href="index.html" class="text-teal-600 hover:text-teal-700 underline focus:outline-none focus:ring-2 focus:ring-teal-500 rounded px-1">&larr; Volver a la Landing Page</a>
+        </div>
+    </div>
+
+    <main class="w-full max-w-3xl bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden mx-auto my-8">
+        <!-- Encabezado -->
         <div class="bg-gradient-to-r from-teal-600 to-cyan-700 p-6 sm:p-8 text-center sm:text-left">
-            <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Unidad de Innovación HealthCore Digital</h1>
-            <p class="text-teal-100 text-sm mt-2">Postulación de Propuestas y Asignación de Módulos de Inteligencia Artificial para la Red de Clínicas Globales.</p>
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Registro de Soluciones de Infraestructura IA</h1>
+            <p class="text-teal-50 mt-2 text-sm opacity-90">Módulo de control de telemetría interna para ingenieros de la unidad HealthCore Digital.</p>
         </div>
 
+        <!-- Formulario con novalidate para el control absoluto con JS (image_84115b.png) -->
         <form id="healthcore-form" class="p-6 sm:p-8 space-y-8" novalidate>
             
-            <div id="success-banner" class="hidden bg-emerald-500/10 border border-emerald-500 text-emerald-400 p-4 rounded-xl flex items-center gap-3" role="alert">
-                <span class="text-xl">🏆</span>
+            <!-- Mensaje de Éxito Simulado -->
+            <div id="success-banner" class="hidden bg-emerald-50 border border-emerald-400 text-emerald-800 p-4 rounded-xl flex items-center gap-3" role="alert">
+                <span class="text-xl" aria-hidden="true">🚀</span>
                 <div>
-                    <p class="font-bold">¡Postulación enviada con éxito!</p>
-                    <p class="text-xs text-emerald-300/90">La propuesta ha sido registrada en el pipeline global de HealthCore. Los directores de área recibirán tu telemetría.</p>
+                    <p class="font-bold">¡Propuesta técnica guardada con éxito!</p>
+                    <p class="text-xs text-emerald-700 mt-0.5">El pipeline ha sido indexado correctamente para la revisión de viabilidad de la Dra. Sandra Okonkwo.</p>
                 </div>
             </div>
 
-            <fieldset class="border border-slate-700 p-5 rounded-xl space-y-4">
-                <legend class="text-sm font-bold tracking-wider uppercase text-teal-400 px-2">Información del Ingeniero Proponente</legend>
+            <!-- SECCIÓN 1: Datos del Proponente -->
+            <fieldset class="border border-slate-200 p-5 rounded-xl space-y-4">
+                <legend class="text-sm font-bold tracking-wider uppercase text-teal-600 px-2 bg-white">Información del Ingeniero Proponente</legend>
                 
                 <div class="grid sm:grid-cols-2 gap-4">
                     <div class="space-y-1">
-                        <label for="engineer-name" class="block text-xs font-semibold text-slate-300">Nombre Completo <span class="text-rose-500">*</span></label>
+                        <label for="engineer-name" class="block text-xs font-semibold text-slate-700">Nombre Completo <span class="text-rose-500" aria-hidden="true">*</span></label>
                         <input type="text" id="engineer-name" name="engineerName" required 
-                               class="w-full bg-slate-900/50 border border-slate-600 rounded-lg px-4 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-teal-500 transition-all">
-                        <p id="error-engineer-name" class="text-xs text-rose-400 font-medium min-h-[16px] mt-1 opacity-0"></p>
+                               class="w-full bg-slate-50 border border-slate-300 rounded-lg px-4 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white transition-all">
+                        <p id="error-engineer-name" class="text-xs text-rose-600 font-medium min-h-[16px] mt-1 opacity-0" aria-live="assertive"></p>
                     </div>
 
                     <div class="space-y-1">
-                        <label for="engineer-email" class="block text-xs font-semibold text-slate-300">Correo Electrónico Corporativo <span class="text-rose-500">*</span></label>
-                        <input type="email" id="engineer-email" name="engineerEmail" required placeholder="usuario@healthcore.com"
-                               class="w-full bg-slate-900/50 border border-slate-600 rounded-lg px-4 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-teal-500 transition-all">
-                        <p id="error-engineer-email" class="text-xs text-rose-400 font-medium min-h-[16px] mt-1 opacity-0"></p>
+                        <label for="engineer-email" class="block text-xs font-semibold text-slate-700">Correo Electrónico Corporativo <span class="text-rose-500" aria-hidden="true">*</span></label>
+                        <input type="email" id="engineer-email" name="engineerEmail" required placeholder="tuusuario@healthcore.com"
+                               class="w-full bg-slate-50 border border-slate-300 rounded-lg px-4 py-2 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white transition-all">
+                        <p id="error-engineer-email" class="text-xs text-rose-600 font-medium min-h-[16px] mt-1 opacity-0" aria-live="assertive"></p>
                     </div>
                 </div>
             </fieldset>
 
-            <fieldset class="border border-slate-700 p-5 rounded-xl space-y-5">
-                <legend class="text-sm font-bold tracking-wider uppercase text-teal-400 px-2">Mapeo de Entidad e Impacto Operativo</legend>
+            <!-- SECCIÓN 2: Métricas de Impacto Reales de HealthCore -->
+            <fieldset class="border border-slate-200 p-5 rounded-xl space-y-5">
+                <legend class="text-sm font-bold tracking-wider uppercase text-teal-600 px-2 bg-white">Mapeo de Área y Métricas de Impacto</legend>
                 
                 <div class="grid sm:grid-cols-2 gap-4">
                     <div class="space-y-1">
-                        <label for="target-department" class="block text-xs font-semibold text-slate-300">Departamento Destinatario <span class="text-rose-500">*</span></label>
+                        <label for="target-department" class="block text-xs font-semibold text-slate-700">Área Destinataria (CONTEXT.md) <span class="text-rose-500" aria-hidden="true">*</span></label>
                         <select id="target-department" name="targetDepartment" required
-                                class="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-teal-500 transition-all">
-                            <option value="">-- Seleccione un departamento --</option>
+                                class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white transition-all">
+                            <option value="">-- Seleccione el área afectada --</option>
                             <option value="clinical_ops">Operaciones Clínicas (Dr. Marcus Reid)</option>
-                            <option value="patient_experience">Experiencia del Paciente y Acceso (Priya Nair)</option>
-                            <option value="revenue_cycle">Ciclo de Ingresos y Facturación (Tom Callahan)</option>
-                            <option value="compliance_governance">Cumplimiento y Gobierno del Dato (Claire Whitfield)</option>
+                            <option value="patient_experience">Experiencia del Paciente (Priya Nair)</option>
+                            <option value="revenue_cycle">Ciclo de Ingresos (Tom Callahan)</option>
+                            <option value="compliance_governance">Cumplimiento y Gobierno (Claire Whitfield)</option>
                             <option value="workforce_people">Personas y Fuerza Laboral (Diane Foster)</option>
+                            <option value="technology_core">Tecnología (James Osei)</option>
                         </select>
-                        <p id="error-target-department" class="text-xs text-rose-400 font-medium min-h-[16px] mt-1 opacity-0"></p>
+                        <p id="error-target-department" class="text-xs text-rose-600 font-medium min-h-[16px] mt-1 opacity-0" aria-live="assertive"></p>
                     </div>
 
                     <div class="space-y-1">
-                        <label for="legal-framework" class="block text-xs font-semibold text-slate-300">Marco Legal de Retención de Datos <span class="text-rose-500">*</span></label>
-                        <select id="legal-framework" name="legalFramework" required
-                                class="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-teal-500 transition-all">
-                            <option value="">-- Seleccione el marco regulatorio --</option>
-                            <option value="HIPAA">HIPAA (Operaciones en Clínicas de EE.UU.)</option>
-                            <option value="UK_GDPR">UK GDPR (Operaciones en Clínicas de Reino Unido)</option>
-                            <option value="Bilateral">Ambas Jurisdicciones (Ecosystem API Core)</option>
-                        </select>
-                        <p id="error-legal-framework" class="text-xs text-rose-400 font-medium min-h-[16px] mt-1 opacity-0"></p>
+                        <label for="deployment-date" class="block text-xs font-semibold text-slate-700">Fecha de Lanzamiento Propuesta <span class="text-rose-500" aria-hidden="true">*</span></label>
+                        <input type="date" id="deployment-date" name="deploymentDate" required
+                               class="w-full bg-slate-50 border border-slate-300 rounded-lg px-4 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white transition-all">
+                        <p id="error-deployment-date" class="text-xs text-rose-600 font-medium min-h-[16px] mt-1 opacity-0" aria-live="assertive"></p>
                     </div>
                 </div>
 
                 <div class="grid sm:grid-cols-2 gap-4">
                     <div class="space-y-1">
-                        <label for="project-budget" class="block text-xs font-semibold text-slate-300">Presupuesto Estimado (USD) <span class="text-rose-500">*</span></label>
-                        <input type="number" id="project-budget" name="projectBudget" required min="5000" max="500000" placeholder="Min. $5,000"
-                               class="w-full bg-slate-900/50 border border-slate-600 rounded-lg px-4 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-teal-500 transition-all">
-                        <p id="error-project-budget" class="text-xs text-rose-400 font-medium min-h-[16px] mt-1 opacity-0"></p>
+                        <label for="project-budget" class="block text-xs font-semibold text-slate-700">Presupuesto Estimado de Infraestructura (USD) <span class="text-rose-500" aria-hidden="true">*</span></label>
+                        <input type="number" id="project-budget" name="projectBudget" required placeholder="Mínimo $1,000 USD"
+                               class="w-full bg-slate-50 border border-slate-300 rounded-lg px-4 py-2 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white transition-all">
+                        <p id="error-project-budget" class="text-xs text-rose-600 font-medium min-h-[16px] mt-1 opacity-0" aria-live="assertive"></p>
                     </div>
 
                     <div class="space-y-1">
-                        <label for="deployment-date" class="block text-xs font-semibold text-slate-300">Fecha Propuesta de Producción <span class="text-rose-500">*</span></label>
-                        <input type="date" id="deployment-date" name="deploymentDate" required
-                               class="w-full bg-slate-900/50 border border-slate-600 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-teal-500 transition-all">
-                        <p id="error-deployment-date" class="text-xs text-rose-400 font-medium min-h-[16px] mt-1 opacity-0"></p>
+                        <label for="impact-metric" class="block text-xs font-semibold text-slate-700">Métrica Crítica a Resolver <span class="text-rose-500" aria-hidden="true">*</span></label>
+                        <select id="impact-metric" name="impactMetric" required
+                                class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white transition-all">
+                            <option value="">-- Seleccione la métrica --</option>
+                            <option value="noshows_22">Reducción del 22% de No-Shows Clínicos</option>
+                            <option value="documentation_35">Optimización de los 35 min de Documentación Diaria</option>
+                            <option value="billing_14">Reducción del 14% de Rechazo de Facturación en EE.UU.</option>
+                            <option value="hiring_47">Aceleración del Onboarding y Contratación (Meta &lt; 47 días)</option>
+                        </select>
+                        <p id="error-impact-metric" class="text-xs text-rose-600 font-medium min-h-[16px] mt-1 opacity-0" aria-live="assertive"></p>
                     </div>
                 </div>
             </fieldset>
 
-            <div class="flex flex-col sm:flex-row sm:justify-end gap-4 pt-4 border-t border-slate-700">
-                <button type="reset" id="btn-reset" class="px-5 py-2.5 rounded-lg text-sm font-semibold text-slate-300 bg-slate-700 hover:bg-slate-600 transition-colors">
+            <!-- Acciones del Formulario: Botón de Envío y Limpieza -->
+            <div class="flex flex-col sm:flex-row sm:justify-end gap-4 pt-4 border-t border-slate-200">
+                <button type="reset" id="btn-reset" class="px-5 py-2.5 rounded-lg text-sm font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400">
                     Limpiar Formulario
                 </button>
-                <button type="submit" id="btn-submit" class="px-6 py-2.5 rounded-lg text-sm font-semibold text-white bg-teal-600 hover:bg-teal-500 transition-colors shadow-md">
+                <button type="submit" id="btn-submit" class="px-6 py-2.5 rounded-lg text-sm font-semibold text-white bg-teal-600 hover:bg-teal-500 transition-colors shadow-md focus:outline-none focus:ring-2 focus:ring-teal-500">
                     Enviar Propuesta de Arquitectura
                 </button>
             </div>
