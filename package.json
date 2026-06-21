@@ -1,0 +1,16 @@
+{
+  "name": "healthcore-backend-agentic",
+  "version": "1.0.0",
+  "description": "Ecosistema de Backend Analítico - HealthCore Digital",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "tsc"
+  },
+  "author": "Jorge Andrés Padilla Arias",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^5.4.5"
+  }
+}
