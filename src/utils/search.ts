@@ -1,11 +1,15 @@
-import { Pacientes, Clinicas } from '../types/index.js';
+import { Pacientes, Clinicas } from '../types/models.js';
 
 /**
- * Busca un paciente por su email exacto en un array desordenado.
+ * Búsqueda Lineal secuencial para colecciones desordenadas.
+ * Devuelve el objeto encontrado o null si no existe.
  */
 export function buscarPacientePorEmailLineal(pacientes: Pacientes[], emailBuscar: string): Pacientes | null {
+    if (!pacientes || pacientes.length === 0 || !emailBuscar) return null;
+    
+    const emailNormalizado = emailBuscar.toLowerCase().trim();
     for (let i = 0; i < pacientes.length; i++) {
-        if (pacientes[i].email.toLowerCase() === emailBuscar.toLowerCase()) {
+        if (pacientes[i].email.toLowerCase().trim() === emailNormalizado) {
             return pacientes[i];
         }
     }
@@ -13,22 +17,27 @@ export function buscarPacientePorEmailLineal(pacientes: Pacientes[], emailBuscar
 }
 
 /**
- * Busca una clínica por su id_clinica en un array previamente ordenado de forma ascendente.
+ * Búsqueda Binaria de alta velocidad sobre colecciones previamente ordenadas por ID.
+ * Cumple con devolver el índice exacto o -1 si no se encuentra.
  */
-export function buscarClinicaPorIdBinario(clinicasOrdenadas: Clinicas[], idBuscar: number): Clinicas | null {
+export function buscarClinicaPorIdBinario(clinicasOrdenadas: Clinicas[], idBuscar: number): number {
+    if (!clinicasOrdenadas || clinicasOrdenadas.length === 0) return -1;
+    
     let izquierda = 0;
     let derecha = clinicasOrdenadas.length - 1;
 
     while (izquierda <= derecha) {
         const medio = Math.floor((izquierda + derecha) / 2);
-        if (clinicasOrdenadas[medio].id_clinica === idBuscar) {
-            return clinicasOrdenadas[medio];
+        const idActual = clinicasOrdenadas[medio].id_clinica;
+
+        if (idActual === idBuscar) {
+            return medio;
         }
-        if (clinicasOrdenadas[medio].id_clinica < idBuscar) {
+        if (idActual < idBuscar) {
             izquierda = medio + 1;
         } else {
             derecha = medio - 1;
         }
     }
-    return null;
+    return -1;
 }

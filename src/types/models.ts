@@ -1,5 +1,5 @@
 export interface Pacientes {
-    id_paciente: string; // UUID
+    id_paciente: string;
     nombre: string;
     apellido: string;
     fecha_nacimiento: Date;
@@ -19,34 +19,26 @@ export interface Clinicas {
 }
 
 export interface Citas_Medicas {
-    id_cita: string; // UUID
-    id_paciente: string; // FK
-    id_clinica: number; // FK
-    fecha_hora: Date; // Almacenada en UTC
+    id_cita: string;
+    id_paciente: string;
+    id_clinica: number;
+    fecha_hora: Date;
     tipo_atencion: 'Primaria' | 'Especialista' | 'Cronico' | 'Preventivo';
     canal_reserva: 'Telefono' | 'Web' | 'App' | 'Presencial';
     estado_cita: 'Programada' | 'Completada' | 'No-Show' | 'Cancelada';
-    score_riesgo_noshow: number; // Decimal (3,2) -> 0.00 a 1.00
-}
-
-export interface Encuentros_Clinicos {
-    id_encuentro: string; // UUID
-    id_cita: string; // FK
-    notas_clinicas: string;
-    tiempo_doc_minutos: number;
-    asistido_por_ia: boolean;
+    score_riesgo_noshow: number;
 }
 
 export interface Reclamaciones_Facturacion {
-    id_reclamacion: string; // UUID
-    id_encuentro: string; // FK
+    id_reclamacion: string;
+    id_encuentro: string;
     codigo_cie10: string;
     monto_bruto: number;
     moneda: 'USD' | 'GBP';
     tipo_pagador: 'Seguro_Comercial' | 'Medicare' | 'Medicaid' | 'Privado' | 'NHS';
     estado_factura: 'Pendiente_Revision' | 'Enviada' | 'Aprobada' | 'Rechazada';
     motivo_rechazo: string;
-    validado_por_ia: boolean;
+    validated_por_ia: boolean;
 }
 
 export interface CriteriosFiltroCita {
