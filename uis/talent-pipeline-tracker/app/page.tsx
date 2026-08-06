@@ -6,6 +6,10 @@ import { getCandidates, createCandidate } from '@/services/api';
 import { Candidate } from '@/types/candidate';
 import Link from 'next/link';
 
+function getErrorMessage(error: unknown) {
+  return error instanceof Error ? error.message : 'Error desconocido';
+}
+
 export default function CandidatesPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -33,21 +37,35 @@ export default function CandidatesPage() {
   const statusFilter = searchParams.get('status') || '';
   const stageFilter = searchParams.get('stage') || '';
 
-  const fetchList = async () => {
-    try {
-      setLoading(true);
-      const data = await getCandidates();
-      setCandidates(data);
-      setError(null);
-    } catch (err: any) {
-      setError(err.message || 'Error desconocido');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchList();
+    let cancelled = false;
+
+    const fetchList = async () => {
+      try {
+        const data = await getCandidates();
+
+        if (cancelled) {
+          return;
+        }
+
+        setCandidates(data);
+        setError(null);
+      } catch (error: unknown) {
+        if (!cancelled) {
+          setError(getErrorMessage(error));
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    };
+
+    void fetchList();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const handleSearchChange = (value: string) => {
@@ -85,6 +103,7 @@ export default function CandidatesPage() {
     }
     try {
       setFormError(null);
+      setLoading(true);
       await createCandidate(formData);
       setShowModal(false);
       setFormData({
@@ -98,9 +117,13 @@ export default function CandidatesPage() {
         status: 'Applied',
         stage: 'Sourcing',
       });
-      fetchList();
-    } catch (err: any) {
-      setFormError(err.message || 'Error al guardar la candidatura');
+      const data = await getCandidates();
+      setCandidates(data);
+      setError(null);
+      setLoading(false);
+    } catch (error: unknown) {
+      setFormError(getErrorMessage(error));
+      setLoading(false);
     }
   };
 

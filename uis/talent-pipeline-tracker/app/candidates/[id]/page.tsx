@@ -1,107 +1,137 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import {
-  getCandidateById,
-  patchCandidate,
-  updateCandidate,
-  getCandidateNotes,
-  addCandidateNote,
-  deleteCandidateNote,
-} from '../services/api';
-import { Candidate, Note } from '../types/candidate';
+import { useEffect, useState } from 'react';
+import { useParams } from 'next/navigation';
 import Link from 'next/link';
 
+import {
+  addCandidateNote,
+  deleteCandidateNote,
+  getCandidateById,
+  getCandidateNotes,
+  patchCandidate,
+  updateCandidate,
+} from '@/services/api';
+import { Candidate, Note } from '@/types/candidate';
+
+function getErrorMessage(error: unknown) {
+  return error instanceof Error ? error.message : 'Error al cargar los datos';
+}
+
 export default function CandidateDetailPage() {
-  const params = useParams();
-  const router = useRouter();
-  const id = params.id as string;
+  const params = useParams<{ id: string }>();
+  const id = params.id;
 
   const [candidate, setCandidate] = useState<Candidate | null>(null);
   const [notes, setNotes] = useState<Note[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  const [newNoteText, setNewNoteText] = useState<string>('');
-  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [newNoteText, setNewNoteText] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
   const [editFormData, setEditFormData] = useState<Partial<Candidate>>({});
 
-  const loadData = async () => {
-    try {
-      setLoading(true);
-      const [candData, notesData] = await Promise.all([
-        getCandidateById(id),
-        getCandidateNotes(id),
-      ]);
-      setCandidate(candData);
-      setEditFormData(candData);
-      setNotes(notesData);
-      setError(null);
-    } catch (err: any) {
-      setError(err.message || 'Error al cargar los datos');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    if (id) loadData();
+    if (!id) {
+      return;
+    }
+
+    let cancelled = false;
+
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        const [candidateData, notesData] = await Promise.all([
+          getCandidateById(id),
+          getCandidateNotes(id),
+        ]);
+
+        if (cancelled) {
+          return;
+        }
+
+        setCandidate(candidateData);
+        setEditFormData(candidateData);
+        setNotes(notesData);
+        setError(null);
+      } catch (error: unknown) {
+        if (!cancelled) {
+          setError(getErrorMessage(error));
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    };
+
+    void loadData();
+
+    return () => {
+      cancelled = true;
+    };
   }, [id]);
 
-  const handleStatusChange = async (newStatus: string) => {
+  const handleStatusChange = async (status: string) => {
     try {
-      const updated = await patchCandidate(id, { status: newStatus });
+      const updated = await patchCandidate(id, { status });
       setCandidate(updated);
-    } catch (err: any) {
-      alert(err.message || 'Error al actualizar el estado');
+    } catch (error: unknown) {
+      alert(getErrorMessage(error));
     }
   };
 
-  const handleStageChange = async (newStage: string) => {
+  const handleStageChange = async (stage: string) => {
     try {
-      const updated = await patchCandidate(id, { stage: newStage });
+      const updated = await patchCandidate(id, { stage });
       setCandidate(updated);
-    } catch (err: any) {
-      alert(err.message || 'Error al actualizar la etapa');
+    } catch (error: unknown) {
+      alert(getErrorMessage(error));
     }
   };
 
-  const handleAddNote = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newNoteText.trim()) return;
+  const handleAddNote = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    if (!newNoteText.trim()) {
+      return;
+    }
+
     try {
       await addCandidateNote(id, newNoteText);
       setNewNoteText('');
-      const updatedNotes = await getCandidateNotes(id);
-      setNotes(updatedNotes);
-    } catch (err: any) {
-      alert(err.message || 'Error al añadir la nota');
+      setNotes(await getCandidateNotes(id));
+    } catch (error: unknown) {
+      alert(getErrorMessage(error));
     }
   };
 
   const handleDeleteNote = async (noteId: number) => {
     try {
       await deleteCandidateNote(id, noteId);
-      setNotes(notes.filter((n) => n.id !== noteId));
-    } catch (err: any) {
-      alert(err.message || 'Error al eliminar la nota');
+      setNotes((current) => current.filter((note) => note.id !== noteId));
+    } catch (error: unknown) {
+      alert(getErrorMessage(error));
     }
   };
 
-  const handleEditSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleEditSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+
     try {
       const updated = await updateCandidate(id, editFormData);
       setCandidate(updated);
+      setEditFormData(updated);
       setIsEditing(false);
-    } catch (err: any) {
-      alert(err.message || 'Error al actualizar candidato');
+    } catch (error: unknown) {
+      alert(getErrorMessage(error));
     }
   };
 
-  if (loading) return <div className="text-center py-20 text-slate-500">Cargando detalle...</div>;
-  if (error || !candidate)
+  if (loading) {
+    return <div className="text-center py-20 text-slate-500">Cargando detalle...</div>;
+  }
+
+  if (error || !candidate) {
     return (
       <div className="p-10 text-center">
         <div className="text-red-600 mb-4">{error || 'Candidato no encontrado'}</div>
@@ -110,6 +140,7 @@ export default function CandidateDetailPage() {
         </Link>
       </div>
     );
+  }
 
   return (
     <main className="min-h-screen bg-slate-50 p-6 md:p-10">
@@ -119,14 +150,13 @@ export default function CandidateDetailPage() {
             &larr; Volver al Pipeline
           </Link>
           <button
-            onClick={() => setIsEditing(!isEditing)}
+            onClick={() => setIsEditing((current) => !current)}
             className="text-sm bg-slate-200 hover:bg-slate-300 text-slate-800 px-3 py-1.5 rounded-lg font-medium transition"
           >
             {isEditing ? 'Cancelar Edición' : 'Editar Datos'}
           </button>
         </div>
 
-        {/* Formulario de Edición o Tarjeta de Datos */}
         {isEditing ? (
           <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 mb-6">
             <h2 className="text-xl font-bold text-slate-900 mb-4">Editar Candidatura</h2>
@@ -136,7 +166,7 @@ export default function CandidateDetailPage() {
                 <input
                   type="text"
                   value={editFormData.full_name || ''}
-                  onChange={(e) => setEditFormData({ ...editFormData, full_name: e.target.value })}
+                  onChange={(event) => setEditFormData({ ...editFormData, full_name: event.target.value })}
                   className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm"
                 />
               </div>
@@ -146,7 +176,7 @@ export default function CandidateDetailPage() {
                   <input
                     type="email"
                     value={editFormData.email || ''}
-                    onChange={(e) => setEditFormData({ ...editFormData, email: e.target.value })}
+                    onChange={(event) => setEditFormData({ ...editFormData, email: event.target.value })}
                     className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm"
                   />
                 </div>
@@ -155,7 +185,7 @@ export default function CandidateDetailPage() {
                   <input
                     type="text"
                     value={editFormData.phone || ''}
-                    onChange={(e) => setEditFormData({ ...editFormData, phone: e.target.value })}
+                    onChange={(event) => setEditFormData({ ...editFormData, phone: event.target.value })}
                     className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm"
                   />
                 </div>
@@ -165,7 +195,7 @@ export default function CandidateDetailPage() {
                 <input
                   type="text"
                   value={editFormData.position || ''}
-                  onChange={(e) => setEditFormData({ ...editFormData, position: e.target.value })}
+                  onChange={(event) => setEditFormData({ ...editFormData, position: event.target.value })}
                   className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm"
                 />
               </div>
@@ -191,7 +221,7 @@ export default function CandidateDetailPage() {
                   <label className="block text-xs text-slate-500 mb-1">Estado</label>
                   <select
                     value={candidate.status}
-                    onChange={(e) => handleStatusChange(e.target.value)}
+                    onChange={(event) => handleStatusChange(event.target.value)}
                     className="border border-slate-300 rounded-lg px-3 py-1.5 text-sm bg-blue-50 text-blue-800 font-semibold"
                   >
                     <option value="Applied">Applied</option>
@@ -204,7 +234,7 @@ export default function CandidateDetailPage() {
                   <label className="block text-xs text-slate-500 mb-1">Etapa</label>
                   <select
                     value={candidate.stage}
-                    onChange={(e) => handleStageChange(e.target.value)}
+                    onChange={(event) => handleStageChange(event.target.value)}
                     className="border border-slate-300 rounded-lg px-3 py-1.5 text-sm bg-purple-50 text-purple-800 font-semibold"
                   >
                     <option value="Sourcing">Sourcing</option>
@@ -259,7 +289,6 @@ export default function CandidateDetailPage() {
           </div>
         )}
 
-        {/* Sección de Notas */}
         <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
           <h3 className="text-lg font-bold text-slate-900 mb-4">Notas Internas</h3>
 
@@ -268,7 +297,7 @@ export default function CandidateDetailPage() {
               type="text"
               placeholder="Escribe una nota interna sobre el candidato..."
               value={newNoteText}
-              onChange={(e) => setNewNoteText(e.target.value)}
+              onChange={(event) => setNewNoteText(event.target.value)}
               className="flex-1 border border-slate-300 rounded-lg px-3 py-2 text-sm"
             />
             <button
@@ -284,7 +313,10 @@ export default function CandidateDetailPage() {
               <p className="text-sm text-slate-500 text-center py-4">No hay notas registradas para este candidato.</p>
             ) : (
               notes.map((note) => (
-                <div key={note.id} className="p-3 bg-slate-50 rounded-lg border border-slate-200 flex justify-between items-start gap-4">
+                <div
+                  key={note.id}
+                  className="p-3 bg-slate-50 rounded-lg border border-slate-200 flex justify-between items-start gap-4"
+                >
                   <p className="text-sm text-slate-800">{note.text}</p>
                   <button
                     onClick={() => handleDeleteNote(note.id)}
